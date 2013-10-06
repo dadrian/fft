@@ -9,7 +9,7 @@ using namespace std;
 template<typename T>
 void print_vec(const vector<T> &v) {
 	for_each(v.begin(), v.end(), [](const T& elt) {
-		cout << elt << " ";
+		cout << elt << ", ";
 	});
 	cout << endl;
 }
@@ -28,6 +28,14 @@ int main(int argc, char *argv[]) {
 	cout << "FFT [4, 0, 0, 0]: ";
 	auto fft_res = dft_simple(x);
 	print_vec(fft_res);
+	vector<uint8_t> in(1024);
+	transform(in.begin(), in.end(), in.begin(), [](const uint8_t& elt) {
+		static uint8_t i = 0;
+		return i++;
+	});
+	cout << "FFT [0:255, 0:255, 0:255, 0:255]: " << endl;
+	auto in_res = dft_simple(in);
+	print_vec(in_res);
 	/*
 	cout << "Making big vec..." << endl;
 	srand(time(0));
