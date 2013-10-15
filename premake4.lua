@@ -16,19 +16,5 @@ solution "fft_sandbox"
       configuration "Release"
          defines { "NDEBUG" }
          flags { "Optimize" }    
-
-   project "test"
-      kind "ConsoleApp"
-      language "C++"
-      files { "main.cpp" }
-      links { "fft" }
-      buildoptions { "--std=c++11" }
-
-      configuration "Debug"
-         defines { "DEBUG" }
-         flags { "Symbols" }
- 
-      configuration "Release"
-         defines { "NDEBUG" }
-         flags { "Optimize" }
+         
 

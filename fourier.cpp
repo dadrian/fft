@@ -1,10 +1,8 @@
 #include "fourier.h"
 
-#include <algorithm>
 #include <cmath>
 
 using namespace std;
-
 
 typedef vector<complex<double>> fft_res;
 
@@ -41,7 +39,7 @@ static complex<double> * dft_simple_helper(complex<double> *x, size_t N) {
 	return X;
 }
 
-std::vector<complex<double>> naive_dft(const std::vector<uint8_t> &x) {
+std::vector<complex<double>> naive_dft(const std::vector<int16_t> &x) {
 	fft_res res;
 	res.resize(x.size());
 	
@@ -58,7 +56,7 @@ std::vector<complex<double>> naive_dft(const std::vector<uint8_t> &x) {
 	return res;
 }
 
-std::vector<std::complex<double>> naive_dft_better(const std::vector<uint8_t> &x) {
+std::vector<std::complex<double>> naive_dft_better(const std::vector<int16_t> &x) {
 	fft_res res;
 	res.resize(x.size());
 
@@ -78,17 +76,16 @@ std::vector<std::complex<double>> naive_dft_better(const std::vector<uint8_t> &x
 	return res;
 }
 
-std::vector<std::complex<double>> dft_simple(const std::vector<uint8_t> &x) {
-	complex<double> *converted = static_cast<complex<double> *>(calloc(x.size(), sizeof(complex<double>)));
+std::vector<std::complex<double>> dft_simple(const std::vector<int16_t> &x, const size_t &first) {
+	complex<double> *converted = static_cast<complex<double> *>(calloc(k_fourier_frame_size, sizeof(complex<double>)));
 	complex<double> *it = converted;
-	for (size_t i = 0; i < x.size(); ++i) {
-		new (it) complex<double>(static_cast<double>(x[i]), 0.0);
+	for (size_t i = 0; i < k_fourier_frame_size; ++i) {
+		new (it) complex<double>(static_cast<double>(x[first + i]), 0.0);
 		it += 1;
 	}
-	complex<double> *X = dft_simple_helper(converted, x.size());
+	complex<double> *X = dft_simple_helper(converted, k_fourier_frame_size);
 	free(converted);
-	fft_res res;
-	res.resize(x.size());
-	copy(X, X + x.size(), res.begin());
-	return res;
+	fft_res res(k_fourier_frame_size);
+	copy(X, X + k_fourier_frame_size, res.begin());
+	return std::move(res);
 }
